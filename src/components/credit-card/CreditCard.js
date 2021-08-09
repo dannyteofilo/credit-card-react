@@ -45,7 +45,7 @@ export const CreditCard = () => {
             <div className="back">
               <div className="band"></div>
               <div className="cvv-band">
-                <label>CVV</label>
+                <label className="label">CVV</label>
                 <div className="cvv-value">123</div>
                 <div className="type-card">
                   {" "}
