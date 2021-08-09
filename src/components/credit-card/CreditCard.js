@@ -4,7 +4,6 @@ import { CardMask } from "../card-mask/CardMask";
 import { CardType } from "../../types/cards";
 
 export const CreditCard = () => {
-  console.log(CardType);
   const [active, setActive] = useState(false);
   const [data, setData] = useState({ month: "1", year: "1" });
   const [card, setType] = useState({ type: "visa", size: 3 });
@@ -25,11 +24,12 @@ export const CreditCard = () => {
   };
 
   const handlegetTypeCard = (card) => {
-    const { type, size } = card;
-    const str = type.replace("-", "_");
-    console.log("type: ", str);
-    const cardInfo = { type: CardType[str].type, size };
-    setType(cardInfo);
+    if (card) {
+      const { type, size } = card;
+      const str = type.replace("-", "_");
+      const cardInfo = { type: CardType[str].type, size };
+      setType(cardInfo);
+    }
   };
 
   const { month, year, cardNumber, cvv, cardName } = data;
@@ -67,7 +67,10 @@ export const CreditCard = () => {
                 </div>
                 <div className="flex-column">
                   <label className="expire-label">Expires</label>
-                  <label className="expire-value">{month}/{year.substr(2,2)}</label>
+                  <label className="expire-value">
+                    {month !== "1" ? month : "MM"}/
+                    {year !== "1" ? year.substr(2, 2) : "YY"}
+                  </label>
                 </div>
               </div>
             </div>
