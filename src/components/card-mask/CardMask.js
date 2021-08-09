@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import creditCardType from "credit-card-type";
 
-export const CardMask = ({ card }) => {
+export const CardMask = ({ card, typeCard }) => {
   const [mask, setMask] = useState(null);
 
   useEffect(() => {
@@ -10,17 +10,19 @@ export const CardMask = ({ card }) => {
 
   const setMaskNumber = (cardNumber) => {
     const types = creditCardType(cardNumber);
-    var card = types[0];
+    console.log(types);
+    const card = types[0];
     if (card) {
-      var offsets = [].concat(0, card.gaps, cardNumber.length);
-      var components = [];
+      const offsets = [].concat(0, card.gaps, cardNumber.length);
+      let components = [];
 
-      for (var i = 0; offsets[i] < cardNumber.length; i++) {
-        var start = offsets[i];
-        var end = Math.min(offsets[i + 1], cardNumber.length);
+      for (let i = 0; offsets[i] < cardNumber.length; i++) {
+        const start = offsets[i];
+        const end = Math.min(offsets[i + 1], cardNumber.length);
         components.push(cardNumber.substring(start, end));
       }
-      console.log(components.join(" "));
+      console.log(components.join(" "), card.type);
+      typeCard({ type: card.type, size: card.code.size });
       return components.join(" ");
     }
     console.log(cardNumber);

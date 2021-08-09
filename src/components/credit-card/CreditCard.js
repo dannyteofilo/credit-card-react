@@ -1,10 +1,13 @@
 import React, { useState } from "react";
 import { years, months } from "../../constants/constants";
 import { CardMask } from "../card-mask/CardMask";
+import { CardType } from "../../types/cards";
 
 export const CreditCard = () => {
+  console.log(CardType);
   const [active, setActive] = useState(false);
   const [data, setData] = useState({ month: "1", year: "1" });
+  const [card, setType] = useState({ type: "visa", size: 3 });
 
   const handleFocus = () => {
     setActive(true);
@@ -21,7 +24,16 @@ export const CreditCard = () => {
     setData(dataForm);
   };
 
+  const handlegetTypeCard = (card) => {
+    const { type, size } = card;
+    const str = type.replace("-", "_");
+    console.log("type: ", str);
+    const cardInfo = { type: CardType[str].type, size };
+    setType(cardInfo);
+  };
+
   const { month, year, cardNumber, cvv, cardName } = data;
+  const { type, size } = card;
   return (
     <div className="container">
       <div className="card">
@@ -36,11 +48,16 @@ export const CreditCard = () => {
                 />
                 <img
                   className="name"
-                  src="https://raw.githubusercontent.com/muhammederdem/credit-card-form/master/src/assets/images/visa.png"
+                  src={`https://raw.githubusercontent.com/muhammederdem/credit-card-form/master/src/assets/images/${type}.png`}
                   alt=""
                 />
               </div>
-              <CardMask card={cardNumber} />
+              <CardMask
+                card={cardNumber}
+                typeCard={(event) => {
+                  handlegetTypeCard(event);
+                }}
+              />
               <div className="holder flex-row">
                 <div className="flex-column name">
                   <label className="holder-label">Card Holder</label>
@@ -50,7 +67,7 @@ export const CreditCard = () => {
                 </div>
                 <div className="flex-column">
                   <label className="expire-label">Expires</label>
-                  <label className="expire-value">MM/YY</label>
+                  <label className="expire-value">{month}/{year.substr(2,2)}</label>
                 </div>
               </div>
             </div>
@@ -65,7 +82,7 @@ export const CreditCard = () => {
                   {" "}
                   <img
                     className="name"
-                    src="https://raw.githubusercontent.com/muhammederdem/credit-card-form/master/src/assets/images/visa.png"
+                    src={`https://raw.githubusercontent.com/muhammederdem/credit-card-form/master/src/assets/images/${type}.png`}
                     alt=""
                   />
                 </div>
@@ -148,7 +165,7 @@ export const CreditCard = () => {
                 onFocus={handleFocus}
                 onBlur={handleFocusOut}
                 onChange={(event) =>
-                  event.target.value.length <= 3 ? handleChange(event) : null
+                  event.target.value.length <= size ? handleChange(event) : null
                 }
                 onKeyPress={(event) => {
                   if (!/[0-9]/.test(event.key)) {
