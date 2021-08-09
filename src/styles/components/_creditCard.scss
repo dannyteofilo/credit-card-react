@@ -187,6 +187,10 @@
       display: flex;
       flex-direction: row;
 
+      >.name{
+        width: 80%;
+      }
+
       .holder-label,
       .expire-label {
         opacity: 0.7;

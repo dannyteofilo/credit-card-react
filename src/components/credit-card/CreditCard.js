@@ -1,7 +1,10 @@
 import React, { useState } from "react";
+import { years, months } from "../../constants/constants";
+import { CardMask } from "../card-mask/CardMask";
 
 export const CreditCard = () => {
   const [active, setActive] = useState(false);
+  const [data, setData] = useState({ month: "1", year: "1" });
 
   const handleFocus = () => {
     setActive(true);
@@ -10,6 +13,15 @@ export const CreditCard = () => {
   const handleFocusOut = () => {
     setActive(false);
   };
+
+  const handleChange = (event) => {
+    const { name, value } = event.target;
+    const dataForm = { ...data };
+    dataForm[name] = value;
+    setData(dataForm);
+  };
+
+  const { month, year, cardNumber, cvv, cardName } = data;
   return (
     <div className="container">
       <div className="card">
@@ -28,11 +40,13 @@ export const CreditCard = () => {
                   alt=""
                 />
               </div>
-              <div className="mask">#### #### #### ####</div>
+              <CardMask card={cardNumber} />
               <div className="holder flex-row">
-                <div className="flex-column">
+                <div className="flex-column name">
                   <label className="holder-label">Card Holder</label>
-                  <label className="holder-value">FULL NAME</label>
+                  <label className="holder-value">
+                    {cardName ? cardName : "FULL NAME"}
+                  </label>
                 </div>
                 <div className="flex-column">
                   <label className="expire-label">Expires</label>
@@ -46,7 +60,7 @@ export const CreditCard = () => {
               <div className="band"></div>
               <div className="cvv-band">
                 <label className="label">CVV</label>
-                <div className="cvv-value">123</div>
+                <div className="cvv-value">{cvv}</div>
                 <div className="type-card">
                   {" "}
                   <img
@@ -62,32 +76,89 @@ export const CreditCard = () => {
         <form className="form" autoComplete="off">
           <div className="form-group">
             <label className="label-form">Card Number</label>
-            <input type="text" className="form-control" />
+            <input
+              name="cardNumber"
+              type="text"
+              className="form-control"
+              value={cardNumber}
+              onChange={(event) =>
+                event.target.value.length <= 16 ? handleChange(event) : null
+              }
+              onKeyPress={(event) => {
+                if (!/[0-9]/.test(event.key)) {
+                  event.preventDefault();
+                }
+              }}
+            />
           </div>
           <div className="form-group">
             <label className="label-form">Card Name</label>
-            <input type="text" className="form-control" />
+            <input
+              type="text"
+              name="cardName"
+              value={cardName}
+              className="form-control"
+              onChange={(event) => handleChange(event)}
+            />
           </div>
 
           <div className="row flex-row">
             <div className="form-group expiration">
               <label className="label-form">Expiration Date</label>
               <div className="row flex-row">
-                <select name="month" className="form-control month"></select>
-                <select name="year" className="form-control year"></select>
+                <select
+                  name="month"
+                  value={month}
+                  className="form-control month"
+                  onChange={(event) => handleChange(event)}
+                >
+                  <option value="1" disabled>
+                    Month
+                  </option>
+                  {months.map((item, index) => (
+                    <option value={item} key={index}>
+                      {item}
+                    </option>
+                  ))}
+                </select>
+                <select
+                  name="year"
+                  value={year}
+                  className="form-control year"
+                  onChange={(event) => handleChange(event)}
+                >
+                  <option value="1" disabled>
+                    Year
+                  </option>
+                  {years.map((item, index) => (
+                    <option value={item} key={index}>
+                      {item}
+                    </option>
+                  ))}
+                </select>
               </div>
             </div>
             <div className="form-group cvv">
               <label className="label-form">CVV</label>
               <input
                 type="text"
+                name="cvv"
+                value={cvv}
                 className="form-control"
                 onFocus={handleFocus}
                 onBlur={handleFocusOut}
+                onChange={(event) =>
+                  event.target.value.length <= 3 ? handleChange(event) : null
+                }
+                onKeyPress={(event) => {
+                  if (!/[0-9]/.test(event.key)) {
+                    event.preventDefault();
+                  }
+                }}
               />
             </div>
           </div>
-          <button type="submit" class="btn">
+          <button type="submit" className="btn">
             Submit
           </button>
         </form>
