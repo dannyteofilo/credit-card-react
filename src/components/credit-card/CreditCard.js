@@ -80,7 +80,7 @@ export const CreditCard = () => {
               <div className="band"></div>
               <div className="cvv-band">
                 <label className="label">CVV</label>
-                <div className="cvv-value">{cvv}</div>
+                <div className="cvv-value">{cvv ? cvv : ''}</div>
                 <div className="type-card">
                   {" "}
                   <img
