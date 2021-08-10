@@ -1,12 +1,27 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { years, months } from "../../constants/constants";
 import { CardMask } from "../card-mask/CardMask";
 import { CardType } from "../../types/cards";
+import { useDispatch, useSelector } from "react-redux";
+import { fetch } from "../../redux/actions/actions";
 
 export const CreditCard = () => {
   const [active, setActive] = useState(false);
   const [data, setData] = useState({ month: "1", year: "1" });
   const [card, setType] = useState({ type: "visa", size: 3 });
+  const store = useSelector((store) => store);
+  const dispatch = useDispatch();
+
+  const { form } = store;
+
+  useEffect(() => {
+    const { error, success } = form;
+    if (error) {
+      console.log(error);
+    } else if (success) {
+      console.log(`It's ok`);
+    }
+  }, [form]);
 
   const handleFocus = () => {
     setActive(true);
@@ -30,6 +45,11 @@ export const CreditCard = () => {
       const cardInfo = { type: CardType[str].type, size };
       setType(cardInfo);
     }
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    dispatch(fetch());
   };
 
   const { month, year, cardNumber, cvv, cardName } = data;
@@ -80,7 +100,7 @@ export const CreditCard = () => {
               <div className="band"></div>
               <div className="cvv-band">
                 <label className="label">CVV</label>
-                <div className="cvv-value">{cvv ? cvv : ''}</div>
+                <div className="cvv-value">{cvv ? cvv : ""}</div>
                 <div className="type-card">
                   {" "}
                   <img
@@ -93,7 +113,7 @@ export const CreditCard = () => {
             </div>
           )}
         </div>
-        <form className="form" autoComplete="off">
+        <form onSubmit={handleSubmit} className="form" autoComplete="off">
           <div className="form-group">
             <label className="label-form">Card Number</label>
             <input

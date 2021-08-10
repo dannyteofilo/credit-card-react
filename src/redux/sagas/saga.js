@@ -1,31 +1,26 @@
-import {
-    put,
-    call,
-    takeLatest
-} from 'redux-saga/effects';
-import Driver from '../../../services/DriverService'
-import * as list from './actions';
-import * as actions from 'shared/redux/constants';
-
-
+import { put, call, takeLatest } from "redux-saga/effects";
+import SubmitForm from "../../services/Form";
+import * as submit from "../actions/actions";
+import { actions } from "../../types/redux";
 
 function* performCreate(action) {
-    try {
-        yield put(list.starts());
+    console.log('here')
+  try {
+    yield put(submit.starts());
 
-        const response = yield call(Driver.create,action.payload);        
-        yield put(list.success(response));
-    } catch (error) {
-        yield put(list.fails({
-            error
-        }));
-    } finally {
-        yield put(list.ends());
-    }
+    const response = yield call(SubmitForm.test, action.payload);
+    yield put(submit.success(response));
+  } catch (error) {
+    yield put(
+      submit.fails({
+        error,
+      })
+    );
+  } finally {
+    yield put(submit.ends());
+  }
 }
 
 export default function* watchFetch() {
-
-    yield takeLatest(actions.DRIVER_CREATE_PERFORM_FETCH, performCreate);
-
+  yield takeLatest(actions.form_request_fetch, performCreate);
 }

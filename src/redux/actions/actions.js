@@ -33,6 +33,7 @@ export const success = (response) => {
 };
 
 export const fetch = (data) => {
+    console.log('calling')
   return {
     type: actions.form_request_fetch,
     payload: data,
