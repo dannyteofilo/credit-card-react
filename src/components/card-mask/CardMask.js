@@ -34,6 +34,12 @@ export const CardMask = ({ card, typeCard }) => {
   };
 
   return (
-    <div className="mask">{mask ? mask.value : "#### #### #### ####"}</div>
+    <div className="mask">
+      {mask
+        ? mask.value !== ""
+          ? mask.value
+          : "#### #### #### ####"
+        : "#### #### #### ####"}
+    </div>
   );
 };
