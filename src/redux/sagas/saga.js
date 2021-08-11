@@ -4,12 +4,11 @@ import * as submit from "../actions/actions";
 import { actions } from "../../types/redux";
 
 function* performCreate(action) {
-    console.log('here')
   try {
     yield put(submit.starts());
 
-    const response = yield call(SubmitForm.test, action.payload);
-    yield put(submit.success(response));
+    const response = yield call(SubmitForm.create, action.payload);
+    yield put(submit.success(response.data));
   } catch (error) {
     yield put(
       submit.fails({

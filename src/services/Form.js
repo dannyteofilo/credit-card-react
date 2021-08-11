@@ -2,11 +2,11 @@ import Http from "./HttpService";
 
 class FormService {
   create(data = {}) {
-    return Http.post(`/card`, data);
+    return Http.post(`/`, data);
   }
 
   test() {
-    return Http.get(`/card`);
+    return Http.get(`/`);
   }
 }
 

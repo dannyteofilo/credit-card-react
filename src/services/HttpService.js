@@ -22,7 +22,7 @@ class Http {
     config = config ? { ...config } : {};
 
     config.baseURL =
-      process.env.REACT_APP_API_URL || "http://localhost:3000/api";
+      process.env.REACT_APP_API_URL || "http://localhost:8080/api";
 
     return config;
   }

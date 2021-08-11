@@ -4,6 +4,7 @@ import { CardMask } from "../card-mask/CardMask";
 import { CardType } from "../../types/cards";
 import { useDispatch, useSelector } from "react-redux";
 import { fetch } from "../../redux/actions/actions";
+import { messageAlert } from "../../utils/utils";
 
 export const CreditCard = () => {
   const [active, setActive] = useState(false);
@@ -15,11 +16,13 @@ export const CreditCard = () => {
   const { form } = store;
 
   useEffect(() => {
-    const { error, success } = form;
+    const { error, success, resp } = form;
     if (error) {
       console.log(error);
+      messageAlert({ type: "error", title: "Error", text: error });
     } else if (success) {
       console.log(`It's ok`);
+      messageAlert({ type: "success", text: resp.message });
     }
   }, [form]);
 
@@ -38,7 +41,7 @@ export const CreditCard = () => {
     setData(dataForm);
   };
 
-  const handlegetTypeCard = (card) => {
+  const handleGetTypeCard = (card) => {
     if (card) {
       const { type, size } = card;
       const str = type.replace("-", "_");
@@ -49,7 +52,14 @@ export const CreditCard = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    dispatch(fetch());
+    const { cardName, cardNumber, cvv, year, month } = data;
+    const dataForm = {
+      cardNumber,
+      cardName,
+      cvv,
+      expiration: `${month}-${year}`,
+    };
+    dispatch(fetch(dataForm));
   };
 
   const { month, year, cardNumber, cvv, cardName } = data;
@@ -75,7 +85,7 @@ export const CreditCard = () => {
               <CardMask
                 card={cardNumber}
                 typeCard={(event) => {
-                  handlegetTypeCard(event);
+                  handleGetTypeCard(event);
                 }}
               />
               <div className="holder flex-row">
@@ -129,6 +139,7 @@ export const CreditCard = () => {
                   event.preventDefault();
                 }
               }}
+              required={true}
             />
           </div>
           <div className="form-group">
@@ -139,6 +150,7 @@ export const CreditCard = () => {
               value={cardName}
               className="form-control"
               onChange={(event) => handleChange(event)}
+              required={true}
             />
           </div>
 
@@ -151,6 +163,7 @@ export const CreditCard = () => {
                   value={month}
                   className="form-control month"
                   onChange={(event) => handleChange(event)}
+                  required={true}
                 >
                   <option value="1" disabled>
                     Month
@@ -166,6 +179,7 @@ export const CreditCard = () => {
                   value={year}
                   className="form-control year"
                   onChange={(event) => handleChange(event)}
+                  required={true}
                 >
                   <option value="1" disabled>
                     Year
@@ -195,6 +209,7 @@ export const CreditCard = () => {
                     event.preventDefault();
                   }
                 }}
+                required={true}
               />
             </div>
           </div>
