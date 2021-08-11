@@ -1,0 +1,41 @@
+/*
+ * Mixin that let us write responsive css.
+ * example: respond-to(small-screens);
+ */
+ @mixin respond-to($media) {
+    @if $media == small-screens {
+      @media only screen and (max-width: map-get($grid-breakpoints, sm)) {
+        @content;
+      }
+    }
+  
+    @else if $media == medium-screens {
+      @media only screen and (min-width: map-get($grid-breakpoints, sm) + 1) and (max-width: map-get($grid-breakpoints, lg) - 1) {
+        @content;
+      }
+    }
+  
+    @else if $media == wide-screens {
+      @media only screen and (min-width: map-get($grid-breakpoints, lg)) {
+        @content;
+      }
+    }
+  
+    @else if $media == wide-small-screens {
+      @media only screen and (min-width: map-get($wide-screens-breakpoints, sm)) {
+        @content;
+      }
+    }
+  
+    @else if $media == wide-medium-screens {
+      @media only screen and (min-width: map-get($wide-screens-breakpoints, md)) {
+        @content;
+      }
+    }
+  
+    @else if $media == wide-large-screens {
+      @media only screen and (min-width: map-get($wide-screens-breakpoints, lg)) {
+        @content;
+      }
+    }
+  }
