@@ -10,6 +10,7 @@ export const CreditCard = () => {
   const [active, setActive] = useState(false);
   const [data, setData] = useState({ month: "1", year: "1" });
   const [card, setType] = useState({ type: "visa", size: 3 });
+  const [loading, setLoading] = useState(false);
   const store = useSelector((store) => store);
   const dispatch = useDispatch();
 
@@ -18,10 +19,17 @@ export const CreditCard = () => {
   useEffect(() => {
     const { error, success, resp } = form;
     if (error) {
-      console.log(error);
+      setLoading(false);
       messageAlert({ type: "error", title: "Error", text: error });
     } else if (success) {
-      console.log(`It's ok`);
+      setLoading(false);
+      setData({
+        month: "1",
+        year: "1",
+        cardNumber: "",
+        cardName: "",
+        cvv: "",
+      });
       messageAlert({ type: "success", text: resp.message });
     }
   }, [form]);
@@ -52,14 +60,28 @@ export const CreditCard = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const { cardName, cardNumber, cvv, year, month } = data;
-    const dataForm = {
-      cardNumber,
-      cardName,
-      cvv,
-      expiration: `${month}-${year}`,
-    };
-    dispatch(fetch(dataForm));
+    if (validDate()) {
+      const { cardName, cardNumber, cvv, year, month } = data;
+      const dataForm = {
+        cardNumber,
+        cardName,
+        cvv,
+        expiration: `${month}-${year}`,
+      };
+      setLoading(true);
+      dispatch(fetch(dataForm));
+    } else {
+      messageAlert({
+        type: "info",
+        title: "Error",
+        text: "Choose a valid format date",
+      });
+    }
+  };
+
+  const validDate = () => {
+    const { year, month } = data;
+    return (year || month) === "1" ? false : true;
   };
 
   const { month, year, cardNumber, cvv, cardName } = data;
@@ -213,8 +235,8 @@ export const CreditCard = () => {
               />
             </div>
           </div>
-          <button type="submit" className="btn">
-            Submit
+          <button type="submit" className="btn" disabled={loading}>
+            {loading ? "Sendig" : "Submit"}
           </button>
         </form>
       </div>
